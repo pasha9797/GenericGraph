@@ -11,6 +11,7 @@ namespace GenericGraph
     {
         public string Name { get; set; }
         public PointF Pos { get; set; }
+        public SizeF Size { get; set; }
 
         public City(string name)
         {

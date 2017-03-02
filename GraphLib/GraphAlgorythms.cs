@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GraphLib
 {
     public partial class Graph<V, E>
     {
-        public void WalkDeep(int n) //Обход в глубину
+        public void WalkDeep(int n, ReDrawDelegate reDrawMethod) //Обход в глубину
         {
-            //SelectNode = null;
+            if (n < 0 || n >= Count())
+                throw new ApplicationException("Start vertex index is out of range");
+
+            ResetVisit();
+            ResetInTree();
             Stack<int> stack = new Stack<int>();
             stack.Push(n);
             vList[n].Visit = true;
-            //UpdateWithSleep(stack);
+            UpdateWithSleep(reDrawMethod);
             while (stack.Count > 0)
             {
                 n = stack.First();
@@ -27,7 +32,7 @@ namespace GraphLib
                     {
                         stack.Push(m);
                         vList[m].Visit = true;
-                        //UpdateWithSleep(stack);
+                        UpdateWithSleep(reDrawMethod);
                         break;
                     }
                     i++;
@@ -35,22 +40,26 @@ namespace GraphLib
                 if (i == vList[n].Edges.Count())
                 {
                     stack.Pop();
-                    //UpdateWithSleep(stack);
+                    UpdateWithSleep(reDrawMethod);
                 }
             }
-            //UpdateWithSleep(stack);
+            UpdateWithSleep(reDrawMethod);
         }
-        public void WalkWide(int n) //Обход в ширину
+        public void WalkWide(int n, ReDrawDelegate reDrawMethod) //Обход в ширину
         {
-            //SelectNode = null;
+            if (n < 0 || n >= Count())
+                throw new ApplicationException("Start vertex index is out of range");
+
+            ResetVisit();
+            ResetInTree();
             Queue<int> queue = new Queue<int>();
             queue.Enqueue(n);
             vList[n].Visit = true;
-            //UpdateWithSleep(queue);
+            UpdateWithSleep(reDrawMethod);
             while (queue.Count > 0)
             {
                 n = queue.Dequeue();
-                //UpdateWithSleep(queue);
+                UpdateWithSleep(reDrawMethod);
                 for (int i = 0; i < vList[n].Edges.Count; i++)
                 {
                     int m = NumNode(vList[n], vList[n].Edges[i]);
@@ -58,100 +67,76 @@ namespace GraphLib
                     {
                         queue.Enqueue(m);
                         vList[m].Visit = true;
-                        //UpdateWithSleep(queue);
+                        UpdateWithSleep(reDrawMethod);
                     }
                 }
             }
-            //UpdateWithSleep(queue);
+            UpdateWithSleep(reDrawMethod);
         }
-        public int Dijkst(int s, int t)
+        private void UpdateWithSleep(ReDrawDelegate reDrawMethod)
         {
-            int result;
-            ResetVisit();
-            SetMatr();
-            // Инициализация
-            int N = vList.Count;
-            for (int i = 0; i <= N - 1; i++)
-                vList[i].Dist = 0xFFFFF;
-            vList[s].Dist = 0;
-            VisitTrue(s);
-            int p = s;
-            do
-            {
-                p = FindMinDist(p);
-                // обновление и найти
-                VisitTrue(p);       // пометка = false
-            }
-            while (p != t);
-            result = vList[p].Dist;
-            PathToStack(s, p);
+            Thread.Sleep(600);
+            reDrawMethod?.Invoke();
+        }
+        public int Dijkstr(int beg, int end, Evaluator<E> weight, ref List<int> path)
+        {
+            if (beg < 0)
+                throw new ApplicationException("Start vertex index is out of range");
+            else if (end >= Count())
+                throw new ApplicationException("End vertex index is out of range");
 
-            return result;
-        }
-        void SetMatr()
-        {
-            int N = vList.Count;
-            aMatrix = new int[N, N];
-            for (int i = 0; i <= N - 1; i++)
-                for (int j = 0; j <= N - 1; j++)
-                    aMatrix[i, j] = 0xFFFFF; // int.MaxValue; 
-            for (int i = 0; i <= N - 1; i++)
+            ResetVisit();
+            ResetInTree();
+            vList[beg].Distance = 0;
+            vList[beg].Path = new List<int> { beg };
+            for (int i = 0; i < Count(); i++)
+                if(i!=beg) vList[i].Distance = Int32.MaxValue;
+
+            List<Vertex> sortedList=new List<Vertex>();
+            foreach(Vertex ver in vList)
+                sortedList.Add(ver);
+
+            while(vList.Find(a=>a.Visit==false) != null)
             {
-                aMatrix[i, i] = 0;
-                int LL = 0;
-                if (vList[i].Edges != null)
+                sortedList.Sort((a, b) => a.Distance - b.Distance);
+                Vertex minVer = sortedList.Find(a => a.Visit == false);
+                foreach(Edge edge in minVer.Edges)
                 {
-                    LL = vList[i].Edges.Count;
-                    for (int j = 0; j <= LL - 1; j++)
-                        aMatrix[i, NumNode(vList[i], vList[i].Edges[j])] = vList[i].Edges[j].Weight;
-                }
-            }
-        }
-        int FindMinDist(int p)
-        {
-            int MinDist = 0xFFFFF; // int.MaxValue;
-            int result = 0;
-            int N = vList.Count;
-            for (int i = 0; i <= N - 1; i++)
-            {
-                if (!vList[i].Visit && (i != p))
-                {
-                    vList[i].Dist = Math.Min(vList[i].Dist, vList[p].Dist + aMatrix[p, i]);
-                    if (vList[i].Dist < MinDist)
+                    Vertex neibour = vList[NumNode(minVer, edge)];
+                    if (neibour.Visit == false && neibour.Distance > minVer.Distance + weight(edge.Inf))
                     {
-                        MinDist = vList[i].Dist;
-                        result = i;
+                        neibour.Distance = minVer.Distance + weight(edge.Inf);
+                        neibour.Path = new List<int>(minVer.Path);
+                        neibour.Path.Add(vList.IndexOf(neibour));
                     }
                 }
+                minVer.Visit = true;
             }
-            return result;
+
+            path = vList[end].Path;
+            VisualizePath(path);
+            return vList[end].Distance;
         }
-        void VisitTrue(int n)  // отметить посещенный
+        private void VisualizePath(List<int> path)
         {
-            vList[n].Visit = true;
-            numCounter++;
-            vList[n].NumVisit = numCounter;
-        }
-        void PathToStack(int s, int p)
-        {
-            pathStack = new Stack<int>();
-            int N = vList.Count;
-            while (p != s)
+            for(int i=0;i<vList.Count;i++)
             {
-                pathStack.Push(p); // положить в стек
-                int i = -1; bool Ok = false;
-                while ((i < N - 1) & !Ok)
-                    Ok = (++i != p) && (vList[p].Dist == vList[i].Dist + aMatrix[i, p]);
-                p = i;
+                if (i<0 || i>=Count())
+                    throw new ApplicationException("Vertex index is out of range");
+
+                if (path.IndexOf(i) == -1)
+                    vList[i].Visit = false;
+                else vList[i].Visit = true;
             }
         }
-        public void Kruscall()
+        public void Kruscall(Evaluator<E> weight)
         {
-            //DrawTree = true;
+            ResetVisit();
+            ResetInTree();
             List<Edge> MST = new List<Edge>();
             List<Edge> MyEdges = GetAllEdges();
             List<HashSet<Vertex>> SetList = new List<HashSet<Vertex>>();
-            MyEdges.Sort((a, b) => { return a.Weight - b.Weight; });
+            MyEdges.Sort((a, b) => { return weight(a.Inf) - weight(b.Inf); });
             for (int i = 0; i < vList.Count; i++)
             {
                 SetList.Add(new HashSet<Vertex>());
@@ -167,30 +152,16 @@ namespace GraphLib
                     edge.InTree = true;
                     edge.Start.InTree = true;
                     edge.End.InTree = true;
-                    //UpdateWithSleep();
                     SetList[component1].UnionWith(SetList[component2]);
                     SetList[component2].Clear();
                 }
             }
         }
-        public List<Edge> GetAllEdges()
-        {
-            List<Edge> list = new List<Edge>();
-            foreach (Vertex node in vList)
-            {
-                foreach (Edge edge in node.Edges)
-                {
-                    if (list.IndexOf(edge) == -1)
-                        list.Add(edge);
-                }
-            }
-            return list;
-        }
-        public int GetComponent(Vertex node, List<HashSet<Vertex>> setList)
+        public int GetComponent(Vertex ver, List<HashSet<Vertex>> setList)
         {
             for (int i = 0; i < setList.Count; i++)
             {
-                if (setList[i].Contains(node))
+                if (setList[i].Contains(ver))
                     return i;
             }
             return -1;
