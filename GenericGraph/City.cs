@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GenericGraph
 {
-    public class City
+    public class City//City
     {
         public string Name { get; set; }
         public PointF Pos { get; set; }
