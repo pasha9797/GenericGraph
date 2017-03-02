@@ -10,7 +10,7 @@ namespace GraphLib
     public delegate void ReDrawDelegate(); //соответствует методу перерисовки (для отрисовки алгоритмов обхода)
     public delegate int Evaluator<E>(E e); //соответсвует методу получения веса ребра
 
-    public partial class Graph<V, E> : IEnumerable //класс графа и главные методы
+    public partial class Graph<V, E> : IEnumerable<V> //класс графа и главные методы
     {
         private List<Vertex> vList = new List<Vertex>(); //список вершин
 
@@ -174,14 +174,16 @@ namespace GraphLib
                 vList[index].Inf = value;
             }
         }
-        public IEnumerator GetEnumerator()
+
+        /*Реализация IEnumerable*/
+        public IEnumerator<V> GetEnumerator()
         {
-            List<V> newVList = new List<V>();
             foreach (Vertex vertex in vList)
-            {
-                newVList.Add(vertex.Inf);
-            }
-            return newVList.GetEnumerator();
+                yield return vertex.Inf;
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
