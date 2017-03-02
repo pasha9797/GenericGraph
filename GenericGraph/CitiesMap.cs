@@ -8,9 +8,10 @@ using System.Drawing;
 
 namespace GenericGraph
 {
-    public class CitiesMap
+    public class CitiesMap //карта с городами и дорогами
     {
-        private Graph<City, Road> mainGraph = new Graph<City, Road>();
+        private Graph<City, Road> mainGraph = new Graph<City, Road>(); //граф городов
+
         public Graph<City, Road> MainGraph
         {
             get
@@ -18,26 +19,26 @@ namespace GenericGraph
                 return mainGraph;
             }
         }
-        public City Selected { get; set; }
+        public City Selected { get; set; } //выбранный текущий город (для построения дороги)
 
-        public void AddCity(string name, float x, float y)
+        public void AddCity(string name, float x, float y) //добавить город
         {
             City city = new GenericGraph.City(name);
             city.Pos = new PointF(x, y);
             MainGraph.AddVertex(city);
         }
-        public void AddRoad(int length, City c1, City c2)
+        public void AddRoad(int length, City c1, City c2) //добавить дорогу
         {
             Road road = new GenericGraph.Road(length);
             road.Connections[0] = c1;
             road.Connections[1] = c2;
             MainGraph.AddEdge(road, c1, c2);
         }
-        public void RemoveCity(City city)
+        public void RemoveCity(City city) //удалить город
         {
             mainGraph.RemoveVertex(city);
         }
-        public City FindByPos(float x, float y)
+        public City FindByPos(float x, float y) //найти город по координатам
         {
             foreach (City city in MainGraph)
             {

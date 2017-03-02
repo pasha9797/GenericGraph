@@ -8,18 +8,20 @@ using GraphLib;
 
 namespace GenericGraph
 {
-    public class Drawer
+    public class Drawer //отрисовщик
     {
         private Brush myBrush;
         private Pen myPen;
         private Font myFont = new Font("Tahoma", 10);
-        public PointF CurMousePos { get; set; }
-        public const int NameMargin = 2;
 
-        public void Draw(Graphics g, CitiesMap cMap)
+        public PointF CurMousePos { get; set; }
+        public const int NameMargin = 2; //отступ названия города от краев прямоугольника
+
+        public void Draw(Graphics g, CitiesMap cMap) //нарисовать cMap на g
         {
             g.Clear(Color.White);
 
+            /*отрисовка дорог*/
             myBrush = Brushes.Black;
             foreach (City city in cMap.MainGraph)
             {
@@ -35,9 +37,10 @@ namespace GenericGraph
                 }
             }
 
-            if (cMap.Selected != null)
+            if (cMap.Selected != null) //отрисовка анимации проложения дороги
                 g.DrawLine(Pens.Gray, cMap.Selected.Pos, CurMousePos);
-
+            
+            /*отрисовка городов*/
             myPen = Pens.Black;
             int i = 0;
             foreach (City city in cMap.MainGraph)

@@ -212,18 +212,23 @@ namespace GenericGraph
                     int beg = Convert.ToInt32(begTB.Text);
                     int end = Convert.ToInt32(endTB.Text);
 
-                    if (beg < 0 || end >= cMap.MainGraph.Count())
-                        MessageBox.Show("Номер начальной вершины должен быть >=0\nНомер конечной вершины должен быть <=" + (cMap.MainGraph.Count() - 1));
+                    if (beg < 0 || beg >= cMap.MainGraph.Count() || end < 0 || end >= cMap.MainGraph.Count())
+                        MessageBox.Show("Номера вершин должны быть >= 0 и <=" + (cMap.MainGraph.Count() - 1));
                     else
                     {
                         List<int> path = new List<int>();
                         int distance = cMap.MainGraph.Dijkstr(beg, end, a => a.Length, ref path);
-                        string s = "Длина пути: " + distance + "\nПуть:\n";
-                        foreach (int n in path)
+                        if (distance != -1)
                         {
-                            s += n + ": " + cMap.MainGraph[n].Name + '\n';
+                            string s = "Длина пути: " + distance + "\nПуть:\n";
+                            foreach (int n in path)
+                            {
+                                s += n + ": " + cMap.MainGraph[n].Name + '\n';
+                            }
+                            MessageBox.Show(s);
                         }
-                        MessageBox.Show(s);
+                        else
+                            MessageBox.Show("Невозможно найти путь между двумя заданными вершинами");
                     }
                 }
                 catch (FormatException)
