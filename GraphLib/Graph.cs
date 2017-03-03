@@ -29,6 +29,7 @@ namespace GraphLib
                 InTree = false;
             }
         }
+
         public class Edge //класс ребра
         {
             public E Inf { get; set; } //соответствующий объект типа E
@@ -51,6 +52,7 @@ namespace GraphLib
 
             vList.Add(new Vertex(v));
         }
+
         public void AddEdge(E e, V v1, V v2) //добавление нового ребра связывающего v1 и v2
         {
             Edge edge = new Edge(e);
@@ -67,17 +69,21 @@ namespace GraphLib
             edge.Start = vertex1;
             edge.End = vertex2;
         }
+
         public void RemoveVertex(V v) //удаление вершины
         {
             Vertex vertex = vList.Find(a => a.Inf.Equals(v));
-
-            if(vertex == null)
+            if (vertex == null)
+            {
                 throw new ApplicationException("Vertex is not in graph");
-
+            }
             foreach (Edge edge in vertex.Edges)
+            {
                 vList[NumNode(vertex, edge)].Edges.Remove(edge);
+            }
             vList.Remove(vertex);
         }
+
         public void RemoveEdge(E e) //удаление ребра
         {
             if(GetAllEdges().Find(a=>a.Inf.Equals(e))==null)
@@ -89,11 +95,13 @@ namespace GraphLib
                     ver.Edges.Remove(ver.Edges.Find(a => a.Inf.Equals(e)));
             }
         }
+
         public void ResetVisit() //очистить метки посещения
         {
             foreach (Vertex ver in vList)
                 ver.Visit = false;
         }
+
         public void ResetInTree() //очистить метки нахождения в остовном дереве
         {
             foreach (Vertex ver in vList)
@@ -103,6 +111,7 @@ namespace GraphLib
                     edge.InTree = false;
             }
         }
+
         public int NumNode(Vertex vertex, Edge edge) //По данной вершине и примыкающему ребру найти вторую вершину
         {
             if (vertex == edge.Start)
@@ -112,12 +121,14 @@ namespace GraphLib
             else
                 throw new ApplicationException("This edge is nor related to this vertex");
         }
+
         public bool IsVertexVisit(V v) //проверка на посещенность
         {
             if (vList.Find(a => a.Inf.Equals(v)) == null)
                 throw new ApplicationException("Vertex is not in graph");
             return vList.Find(a => a.Inf.Equals(v)).Visit;
         }
+
         public bool IsVertexInTree(V v) //проверка на нахождение вершины в остовном дереве
         {
             if (vList.Find(a => a.Inf.Equals(v)) == null)
