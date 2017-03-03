@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace GraphLib
 {
+    public delegate void ReDrawDelegate(); //соответствует методу перерисовки (для отрисовки алгоритмов обхода)
+    public delegate int Evaluator<E>(E e); //соответсвует методу получения веса ребра
+
     public partial class Graph<V, E> //все алгоритмы на графе
     {
         public void WalkDeep(int n, ReDrawDelegate reDrawMethod) //обход в глубину
