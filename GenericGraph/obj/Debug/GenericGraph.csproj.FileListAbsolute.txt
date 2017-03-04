@@ -1,1 +1,2 @@
 D:\Visual Studio\Проекты C#. Рузин С.Б. группа 3.1\GenericGraph-master\GenericGraph\bin\Debug\GenericGraph.exe.config
+C:\Users\pasha\Source\Repos\GenericGraph\GenericGraph\bin\Debug\GenericGraph.exe.config
