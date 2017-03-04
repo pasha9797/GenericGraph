@@ -48,6 +48,7 @@ namespace GraphLib
             }
             UpdateWithSleep(reDrawMethod);
         }
+
         public void WalkWide(int n, ReDrawDelegate reDrawMethod) //обход в ширину
         {
             if (n < 0 || n >= Count())
@@ -76,11 +77,13 @@ namespace GraphLib
             }
             UpdateWithSleep(reDrawMethod);
         }
+
         private void UpdateWithSleep(ReDrawDelegate reDrawMethod) //перерисовка экрана с задержкой через делегат
         {
             Thread.Sleep(500); //задержка
             reDrawMethod?.Invoke(); //вызов перерисовки
         }
+
         public int Dijkstr(int beg, int end, Evaluator<E> weight, ref List<int> path) //дейкстры - минимальный путь
         {
             if (beg < 0 || beg>=Count())
@@ -137,6 +140,7 @@ namespace GraphLib
             }
             else return -1; //если маршрут не найден, вернем -1
         }
+
         private void VisualizePath(List<int> path) //закрасить вершины входящие в маршрут
         {
             for(int i=0;i<vList.Count;i++)
@@ -149,6 +153,7 @@ namespace GraphLib
                 else vList[i].Visit = true;
             }
         }
+
         public void Kruscall(Evaluator<E> weight) //краскал - построение остовного дерева
         {
             ResetVisit();
@@ -175,6 +180,7 @@ namespace GraphLib
                 }
             }
         }
+
         public int GetComponent(Vertex ver, List<HashSet<Vertex>> setList) //узнать компоненту связности для вершины
         {
             for (int i = 0; i < setList.Count; i++)

@@ -135,12 +135,14 @@ namespace GraphLib
                 throw new ApplicationException("Vertex is not in graph");
             return vList.Find(a => a.Inf.Equals(v)).InTree;
         }
+
         public bool IsEdgeInTree(E e) //проверка на нахождение ребра в остовном дереве
         {
             if (GetAllEdges().Find(a => a.Inf.Equals(e)) == null)
                 throw new ApplicationException("Edge is not in graph");
             return GetAllEdges().Find(a => a.Inf.Equals(e)).InTree;
         }
+
         public List<E> GetEdgesOf(V v) //получить все примыкающие к вершине ребра
         {
             Vertex vertex = vList.Find(a => a.Inf.Equals(v));
@@ -152,6 +154,7 @@ namespace GraphLib
                 eList.Add(edge.Inf);
             return eList;
         }
+
         private List<Edge> GetAllEdges() //получить список всех рёбер графа
         {
             List<Edge> list = new List<Edge>();
@@ -165,6 +168,7 @@ namespace GraphLib
             }
             return list;
         }
+
         public int Count() //количество вершин графа
         {
             return vList.Count;

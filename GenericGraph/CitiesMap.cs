@@ -19,6 +19,7 @@ namespace GenericGraph
                 return mainGraph;
             }
         }
+
         public City Selected { get; set; } //выбранный текущий город (для построения дороги)
 
         public void AddCity(string name, float x, float y) //добавить город
@@ -27,6 +28,7 @@ namespace GenericGraph
             city.Pos = new PointF(x, y);
             MainGraph.AddVertex(city);
         }
+
         public void AddRoad(int length, City c1, City c2) //добавить дорогу
         {
             Road road = new GenericGraph.Road(length);
@@ -34,10 +36,12 @@ namespace GenericGraph
             road.Connections[1] = c2;
             MainGraph.AddEdge(road, c1, c2);
         }
+
         public void RemoveCity(City city) //удалить город
         {
             mainGraph.RemoveVertex(city);
         }
+
         public City FindByPos(float x, float y) //найти город по координатам
         {
             foreach (City city in MainGraph)
