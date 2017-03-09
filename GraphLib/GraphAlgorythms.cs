@@ -15,7 +15,9 @@ namespace GraphLib
         public void WalkDeep(int n, ReDrawDelegate reDrawMethod) //обход в глубину
         {
             if (n < 0 || n >= Count())
+            {
                 throw new ApplicationException("Start vertex index is out of range");
+            }
 
             ResetVisit();
             ResetInTree();
@@ -52,7 +54,9 @@ namespace GraphLib
         public void WalkWide(int n, ReDrawDelegate reDrawMethod) //обход в ширину
         {
             if (n < 0 || n >= Count())
+            {
                 throw new ApplicationException("Start vertex index is out of range");
+            }
 
             ResetVisit();
             ResetInTree();
@@ -86,10 +90,14 @@ namespace GraphLib
 
         public int Dijkstr(int beg, int end, Evaluator<E> weight, ref List<int> path) //дейкстры - минимальный путь
         {
-            if (beg < 0 || beg>=Count())
+            if (beg < 0 || beg >= Count())
+            {
                 throw new ApplicationException("Start vertex index is out of range");
-            else if (end<0 || end >= Count())
+            }
+            else if (end < 0 || end >= Count())
+            {
                 throw new ApplicationException("End vertex index is out of range");
+            }
 
             ResetVisit();
             ResetInTree();
@@ -106,8 +114,10 @@ namespace GraphLib
             }
 
             List<Vertex> sortedList=new List<Vertex>(); //копируем vList в sortedList 
-            foreach(Vertex ver in vList)
+            foreach (Vertex ver in vList)
+            {
                 sortedList.Add(ver);
+            }
 
             while(vList.Find(a=>a.Visit==false) != null) //пока остались непосещённые вершины
             {
@@ -138,19 +148,29 @@ namespace GraphLib
                 VisualizePath(path); //закрасим вершины входящие в путь
                 return vList[end].Distance; //вернем расстояние маршрута
             }
-            else return -1; //если маршрут не найден, вернем -1
+            else
+            {
+                return -1; //если маршрут не найден, вернем -1
+            }
         }
 
         private void VisualizePath(List<int> path) //закрасить вершины входящие в маршрут
         {
             for(int i=0;i<vList.Count;i++)
             {
-                if (i<0 || i>=Count())
+                if (i < 0 || i >= Count())
+                {
                     throw new ApplicationException("Vertex index is out of range");
+                }
 
                 if (path.IndexOf(i) == -1)
+                {
                     vList[i].Visit = false;
-                else vList[i].Visit = true;
+                }
+                else
+                {
+                    vList[i].Visit = true;
+                }
             }
         }
 
@@ -186,7 +206,9 @@ namespace GraphLib
             for (int i = 0; i < setList.Count; i++)
             {
                 if (setList[i].Contains(ver))
+                {
                     return i;
+                }
             }
             return -1;
         }

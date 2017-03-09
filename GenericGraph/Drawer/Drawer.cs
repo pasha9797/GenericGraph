@@ -28,9 +28,13 @@ namespace GenericGraph
                 foreach (Road road in cMap.MainGraph.GetEdgesOf(city))
                 {
                     if (cMap.MainGraph.IsEdgeInTree(road))
+                    {
                         myPen = Pens.DarkRed;
+                    }
                     else
+                    {
                         myPen = Pens.Gray;
+                    }
                     g.DrawLine(myPen, road.Connections[0].Pos, road.Connections[1].Pos);
                     PointF mid = new PointF((road.Connections[0].Pos.X + road.Connections[1].Pos.X) / 2, (road.Connections[0].Pos.Y + road.Connections[1].Pos.Y) / 2);
                     g.DrawString(road.Length.ToString(), new Font("Tahoma", 10), myBrush, mid);
@@ -38,7 +42,9 @@ namespace GenericGraph
             }
 
             if (cMap.Selected != null) //отрисовка анимации проложения дороги
+            {
                 g.DrawLine(Pens.Gray, cMap.Selected.Pos, CurMousePos);
+            }
             
             /*отрисовка городов*/
             myPen = Pens.Black;
@@ -46,9 +52,13 @@ namespace GenericGraph
             foreach (City city in cMap.MainGraph)
             {
                 if (cMap.MainGraph.IsVertexVisit(city) || cMap.MainGraph.IsVertexInTree(city))
+                {
                     myBrush = Brushes.DarkKhaki;
+                }
                 else
+                {
                     myBrush = Brushes.LightCyan;
+                }
                 string s = i + ": " + city.Name;
                 SizeF strSize = g.MeasureString(s, myFont);
                 float width = strSize.Width + 2 * NameMargin;

@@ -73,7 +73,9 @@ namespace GenericGraph
             if (cityRB.Checked == true)
             {
                 if (tB.Text == "")
+                {
                     MessageBox.Show("Введите название города!");
+                }
                 else
                 {
                     cMap.AddCity(tB.Text, e.X, e.Y);
@@ -84,9 +86,13 @@ namespace GenericGraph
             {
                 City city = cMap.FindByPos(e.X, e.Y);
                 if (city == null)
+                {
                     cMap.Selected = null;
+                }
                 else if (cMap.Selected == null)
+                {
                     cMap.Selected = city;
+                }
                 drawer.CurMousePos = new Point(e.X, e.Y);
                 InvalidateResult();
             }
@@ -113,7 +119,9 @@ namespace GenericGraph
                     {
                         length = Convert.ToInt32(tB.Text);
                         if (length < 0)
+                        {
                             MessageBox.Show("Пожалуйста, введите неотрицательное число!");
+                        }
                         else
                         {
                             try
@@ -148,7 +156,9 @@ namespace GenericGraph
         private void deepB_Click(object sender, EventArgs e)
         {
             if (cMap.MainGraph.Count() == 0)
+            {
                 MessageBox.Show("Создайте граф!");
+            }
             else
             {
                 try
@@ -156,7 +166,9 @@ namespace GenericGraph
                     int start = Convert.ToInt32(startWalkTB.Text);
 
                     if (start < 0 || start >= cMap.MainGraph.Count())
+                    {
                         MessageBox.Show("Номер вершины выходит за допустимые границы!");
+                    }
                     else
                     {
                         cMap.MainGraph.WalkDeep(start, InvalidateResult);
@@ -173,7 +185,9 @@ namespace GenericGraph
         private void wideB_Click(object sender, EventArgs e)
         {
             if (cMap.MainGraph.Count() == 0)
+            {
                 MessageBox.Show("Создайте граф!");
+            }
             else
             {
                 try
@@ -181,7 +195,9 @@ namespace GenericGraph
                     int start = Convert.ToInt32(startWalkTB.Text);
 
                     if (start < 0 || start >= cMap.MainGraph.Count())
+                    {
                         MessageBox.Show("Номер вершины выходит за допустимые границы!");
+                    }
                     else
                     {
                         cMap.MainGraph.WalkWide(start, InvalidateResult);
@@ -204,7 +220,9 @@ namespace GenericGraph
         private void dijkstrB_Click(object sender, EventArgs e)
         {
             if (cMap.MainGraph.Count() == 0)
+            {
                 MessageBox.Show("Создайте граф!");
+            }
             else
             {
                 try
@@ -213,7 +231,9 @@ namespace GenericGraph
                     int end = Convert.ToInt32(endTB.Text);
 
                     if (beg < 0 || beg >= cMap.MainGraph.Count() || end < 0 || end >= cMap.MainGraph.Count())
+                    {
                         MessageBox.Show("Номера вершин должны быть >= 0 и <=" + (cMap.MainGraph.Count() - 1));
+                    }
                     else
                     {
                         List<int> path = new List<int>();
@@ -228,7 +248,9 @@ namespace GenericGraph
                             MessageBox.Show(s);
                         }
                         else
+                        {
                             MessageBox.Show("Невозможно найти путь между двумя заданными вершинами");
+                        }
                     }
                 }
                 catch (FormatException)
@@ -241,7 +263,9 @@ namespace GenericGraph
         private void cruskalB_Click(object sender, EventArgs e)
         {
             if (cMap.MainGraph.Count() == 0)
+            {
                 MessageBox.Show("Создайте граф!");
+            }
             else
             {
                 cMap.MainGraph.Kruscall(a => a.Length);

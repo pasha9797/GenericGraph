@@ -48,7 +48,9 @@ namespace GraphLib
         public void AddVertex(V v) //добавление новой вершины
         {
             if (vList.Find(a => a.Inf.Equals(v)) != null)
+            {
                 throw new ApplicationException("Vertex already exists in graph");
+            }
 
             vList.Add(new Vertex(v));
         }
@@ -60,9 +62,13 @@ namespace GraphLib
             Vertex vertex2 = vList.Find(a => a.Inf.Equals(v2));
 
             if (vertex1 == null || vertex2 == null)
+            {
                 throw new ApplicationException("One of vertexes is not in graph");
+            }
             else if (vertex1.Edges.Find(a => { return (a.Start == vertex2) || (a.End == vertex2); }) != null)
-                    throw new ApplicationException("Connection between these two vertexes already exists");
+            {
+                throw new ApplicationException("Connection between these two vertexes already exists");
+            }
 
             vertex1.Edges.Add(edge);
             vertex2.Edges.Add(edge);
@@ -86,20 +92,26 @@ namespace GraphLib
 
         public void RemoveEdge(E e) //удаление ребра
         {
-            if(GetAllEdges().Find(a=>a.Inf.Equals(e))==null)
+            if (GetAllEdges().Find(a => a.Inf.Equals(e)) == null)
+            {
                 throw new ApplicationException("Edge is not in graph");
+            }
 
             foreach (Vertex ver in vList)
             {
                 if (ver.Edges.Find(a => a.Inf.Equals(e)) != null)
+                {
                     ver.Edges.Remove(ver.Edges.Find(a => a.Inf.Equals(e)));
+                }
             }
         }
 
         public void ResetVisit() //очистить метки посещения
         {
             foreach (Vertex ver in vList)
+            {
                 ver.Visit = false;
+            }
         }
 
         public void ResetInTree() //очистить метки нахождения в остовном дереве
@@ -108,38 +120,52 @@ namespace GraphLib
             {
                 ver.InTree = false;
                 foreach (Edge edge in ver.Edges)
+                {
                     edge.InTree = false;
+                }
             }
         }
 
         public int NumNode(Vertex vertex, Edge edge) //По данной вершине и примыкающему ребру найти вторую вершину
         {
             if (vertex == edge.Start)
+            {
                 return vList.IndexOf(edge.End);
+            }
             else if (vertex == edge.End)
+            {
                 return vList.IndexOf(edge.Start);
+            }
             else
+            {
                 throw new ApplicationException("This edge is nor related to this vertex");
+            }
         }
 
         public bool IsVertexVisit(V v) //проверка на посещенность
         {
             if (vList.Find(a => a.Inf.Equals(v)) == null)
+            {
                 throw new ApplicationException("Vertex is not in graph");
+            }
             return vList.Find(a => a.Inf.Equals(v)).Visit;
         }
 
         public bool IsVertexInTree(V v) //проверка на нахождение вершины в остовном дереве
         {
             if (vList.Find(a => a.Inf.Equals(v)) == null)
+            {
                 throw new ApplicationException("Vertex is not in graph");
+            }
             return vList.Find(a => a.Inf.Equals(v)).InTree;
         }
 
         public bool IsEdgeInTree(E e) //проверка на нахождение ребра в остовном дереве
         {
             if (GetAllEdges().Find(a => a.Inf.Equals(e)) == null)
+            {
                 throw new ApplicationException("Edge is not in graph");
+            }
             return GetAllEdges().Find(a => a.Inf.Equals(e)).InTree;
         }
 
@@ -147,11 +173,15 @@ namespace GraphLib
         {
             Vertex vertex = vList.Find(a => a.Inf.Equals(v));
             if (vertex == null)
+            {
                 throw new ApplicationException("Vertex is not in graph");
+            }
 
             List<E> eList = new List<E>();
             foreach (Edge edge in vertex.Edges)
+            {
                 eList.Add(edge.Inf);
+            }
             return eList;
         }
 
@@ -163,7 +193,9 @@ namespace GraphLib
                 foreach (Edge edge in node.Edges)
                 {
                     if (list.IndexOf(edge) == -1)
+                    {
                         list.Add(edge);
+                    }
                 }
             }
             return list;

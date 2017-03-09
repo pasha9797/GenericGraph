@@ -46,9 +46,11 @@ namespace GenericGraph
         {
             foreach (City city in MainGraph)
             {
-                if (x >= city.Pos.X -city.Size.Width/ 2 && x <= city.Pos.X + city.Size.Width / 2 &&
+                if (x >= city.Pos.X - city.Size.Width / 2 && x <= city.Pos.X + city.Size.Width / 2 &&
                     y >= city.Pos.Y - city.Size.Height / 2 && y <= city.Pos.Y + city.Size.Height / 2)
+                {
                     return city;
+                }
             }
             return null;
         }
